@@ -1,3 +1,4 @@
+import random
 from django.db import models, transaction
 from django.db.models import Count, Sum
 from django.utils import timezone
@@ -190,3 +191,38 @@ def recalculate_user_scores() -> None:
 def lock_expired_predictions() -> int:
     updated = Prediction.objects.filter(locked=False, match__start_time__lte=timezone.now()).update(locked=True)
     return updated
+
+
+def fill_missing_predictions() -> dict:
+    cutoff_time = timezone.now() + timezone.timedelta(minutes=30)
+    
+    matches_to_close = Match.objects.filter(
+        start_time__lte=cutoff_time,
+        start_time__gt=timezone.now(),
+        status=Match.STATUS_SCHEDULED,
+    )
+    
+    created_count = 0
+    match_count = 0
+    
+    for match in matches_to_close:
+        users = set(Prediction.objects.values_list("user_id", flat=True).distinct())
+        match_users_with_pred = set(Prediction.objects.filter(match=match).values_list("user_id", flat=True))
+        users_without_pred = users - match_users_with_pred
+        
+        for user_id in users_without_pred:
+            max_total_goals = 5
+            home_goals = random.randint(0, max_total_goals)
+            away_goals = random.randint(0, max(0, max_total_goals - home_goals))
+            
+            Prediction.objects.create(
+                user_id=user_id,
+                match=match,
+                predicted_home_score=home_goals,
+                predicted_away_score=away_goals,
+                locked=True,
+            )
+            created_count += 1
+        match_count += 1
+    
+    return {"matches_processed": match_count, "predictions_created": created_count}

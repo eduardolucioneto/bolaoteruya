@@ -6,7 +6,7 @@
     <h1 class="display-6 mb-2">Jogos da competição</h1>
     <p class="text-secondary mb-0">Visualize as partidas, acompanhe o status e entre rapidamente para palpitar.</p>
 </section>
-<div class="surface-card">
+<div class="surface-card mb-3">
     <div class="table-responsive" style="max-height: 60vh; overflow-y: auto;">
         <table class="table app-table table-striped align-middle mb-0">
             <thead><tr><th>#</th><th>Partida</th><th>Fase</th><th>Data</th><th>Status</th><th></th></tr></thead>
@@ -27,4 +27,17 @@
         </table>
     </div>
 </div>
+{% if is_paginated %}
+<div class="d-flex justify-content-center gap-2">
+    {% if page_obj.has_previous %}
+    <a class="btn btn-outline-secondary btn-sm" href="?page=1{% if request.GET.stage %}&stage={{ request.GET.stage }}{% endif %}{% if request.GET.group %}&group={{ request.GET.group }}{% endif %}">Primeira</a>
+    <a class="btn btn-outline-secondary btn-sm" href="?page={{ page_obj.previous_page_number }}{% if request.GET.stage %}&stage={{ request.GET.stage }}{% endif %}{% if request.GET.group %}&group={{ request.GET.group }}{% endif %}">Anterior</a>
+    {% endif %}
+    <span class="btn btn-light btn-sm disabled">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+    <a class="btn btn-outline-secondary btn-sm" href="?page={{ page_obj.next_page_number }}{% if request.GET.stage %}&stage={{ request.GET.stage }}{% endif %}{% if request.GET.group %}&group={{ request.GET.group }}{% endif %}">Próxima</a>
+    <a class="btn btn-outline-secondary btn-sm" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.stage %}&stage={{ request.GET.stage }}{% endif %}{% if request.GET.group %}&group={{ request.GET.group }}{% endif %}">Última</a>
+    {% endif %}
+</div>
+{% endif %}
 {% endblock %}

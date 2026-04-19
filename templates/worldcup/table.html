@@ -1,24 +1,32 @@
 {% extends "base.html" %}
-{% block title %}Tabela{% endblock %}
+{% block title %}Tabela - Seleções{% endblock %}
 {% block content %}
-<div class="card shadow-sm">
-    <div class="card-header bg-white"><strong>Seleções cadastradas</strong></div>
-    <div class="table-responsive">
-        <table class="table mb-0">
-            <thead><tr><th>Seleção</th><th>Grupo</th><th>Ativa</th></tr></thead>
-            <tbody>
-                {% for team in teams %}
-                <tr>
-                    <td>{{ team.name }}</td>
-                    <td>{{ team.group|default:"-" }}</td>
-                    <td>{{ team.active|yesno:"Sim,Não" }}</td>
-                </tr>
-                {% empty %}
-                <tr><td colspan="3" class="text-center py-4">Nenhuma seleção cadastrada.</td></tr>
+<section class="page-intro mb-4">
+    <span class="eyebrow">Copa do Mundo</span>
+    <h1 class="display-6 mb-2">Seleções participantes</h1>
+    <p class="text-secondary mb-0">Todas as 32 Seleções da competição</p>
+</section>
+<div class="row g-3">
+{% for group_letter, teams_in_group in groups.items %}
+    <div class="col-12 col-md-6 col-lg-4">
+        <div class="surface-card h-100">
+            <div class="card-header bg-transparent border-0 pb-2">
+                <h5 class="mb-0 text-center fw-bold">Grupo {{ group_letter }}</h5>
+            </div>
+            <div class="card-body p-2">
+                {% for team in teams_in_group %}
+                <a href="{% url 'worldcup:team_detail' team.pk %}" class="text-decoration-none">
+                    <div class="d-flex align-items-center gap-2 p-2 rounded bg-light-subtle mb-2 team-item">
+                        {% if team.flag_url %}
+                        <img src="{{ team.flag_url }}" alt="{{ team.name_ptbr }}" style="width: 32px; height: 24px; object-fit: contain; border-radius: 2px; flex-shrink: 0;">
+                        {% endif %}
+                        <span class="fw-medium text-truncate mb-0 text-dark">{{ team.name_ptbr }}</span>
+                    </div>
+                </a>
                 {% endfor %}
-            </tbody>
-        </table>
+            </div>
+        </div>
     </div>
+{% endfor %}
 </div>
 {% endblock %}
-

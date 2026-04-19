@@ -1,11 +1,17 @@
 from django.contrib import messages
 from django.contrib.auth import views as auth_views
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
 
-from accounts.forms import ProfileForm, UserProfileForm
+from accounts.forms import AdminUserCreateForm, ProfileForm, UserProfileForm
+from accounts.models import Profile
 from core.models import PoolConfiguration
+
+
+class AdminRequiredMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_staff
 
 
 class LoginView(auth_views.LoginView):
@@ -46,3 +52,21 @@ class ProfileView(LoginRequiredMixin, TemplateView):
             messages.success(request, "Perfil atualizado com sucesso.")
             return redirect("accounts:profile")
         return render(request, self.template_name, {"user_form": user_form, "profile_form": profile_form})
+
+
+class AdminCreateUserView(LoginRequiredMixin, AdminRequiredMixin, TemplateView):
+    template_name = "accounts/admin_create_user.html"
+
+    def get(self, request, *args, **kwargs):
+        form = AdminUserCreateForm()
+        return render(request, self.template_name, {"form": form})
+
+    def post(self, request, *args, **kwargs):
+        form = AdminUserCreateForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.save()
+            Profile.objects.get_or_create(user=user)
+            messages.success(request, f"Usuário {user.username} criado com sucesso.")
+            return redirect("accounts:admin_create_user")
+        return render(request, self.template_name, {"form": form})

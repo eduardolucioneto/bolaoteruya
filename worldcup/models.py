@@ -70,6 +70,89 @@ class Team(models.Model):
     flag = models.ImageField(upload_to="flags/", blank=True, null=True)
     active = models.BooleanField(default=True)
 
+    TEAM_NAMES_PTBR = {
+        "Argentina": "Argentina",
+        "Australia": "Austrália",
+        "Belgium": "Bélgica",
+        "Brasil": "Brasil",
+        "Cameroon": "Camarões",
+        "Canada": "Canadá",
+        "Costa Rica": "Costa Rica",
+        "Croatia": "Croácia",
+        "Czechia": "República Tcheca",
+        "Denmark": "Dinamarca",
+        "Ecuador": "Equador",
+        "Egypt": "Egito",
+        "England": "Inglaterra",
+        "France": "França",
+        "Germany": "Alemanha",
+        "Ghana": "Gana",
+        "Haiti": "Haiti",
+        "IR Iran": "Irã",
+        "Iran": "Irã",
+        "Iraq": "Iraque",
+        "Japan": "Japão",
+        "Jordan": "Jordânia",
+        "Korea Republic": "Coreia do Sul",
+        "Mexico": "México",
+        "Morocco": "Marrocos",
+        "Netherlands": "Holanda",
+        "New Zealand": "Nova Zelândia",
+        "Norway": "Noruega",
+        "Panama": "Panamá",
+        "Paraguay": "Paraguai",
+        "Poland": "Polônia",
+        "Portugal": "Portugal",
+        "Qatar": "Catar",
+        "Saudi Arabia": "Arábia Saudita",
+        "Scotland": "Escócia",
+        "Senegal": "Senegal",
+        "Serbia": "Sérvia",
+        "South Africa": "África do Sul",
+        "South Korea": "Coreia do Sul",
+        "Spain": "Espanha",
+        "Sweden": "Suécia",
+        "Switzerland": "Suíça",
+        "Tunisia": "Tunísia",
+        "Turkey": "Turquia",
+        "Türkiye": "Turquia",
+        "United States": "Estados Unidos",
+        "Uruguay": "Uruguai",
+        "Wales": "País de Gales",
+        "Algeria": "Argélia",
+        "Bosnia and Herzegovina": "Bósnia-Herzegovina",
+        "Cabo Verde": "Cabo Verde",
+        "Colombia": "Colômbia",
+        "Congo DR": "República Democrática do Congo",
+        "Curaçao": "Curaçao",
+        "Côte d'Ivoire": "Costa do Marfim",
+        "Alemanha": "Alemanha",
+        "Espanha": "Espanha",
+        "França": "França",
+        "México": "México",
+        "Uzbequistão": "Uzbequistão",
+        "Uzbekistan": "Uzbequistão",
+    }
+
+    TEAM_CODES = {
+        "Argentina": "ar", "Australia": "au", "Belgium": "be", "Brasil": "br",
+        "Cameroon": "cm", "Canada": "ca", "Costa Rica": "cr", "Croatia": "hr",
+        "Czechia": "cz", "Denmark": "dk", "Ecuador": "ec", "Egypt": "eg",
+        "England": "gb-eng", "France": "fr", "Germany": "de", "Ghana": "gh",
+        "Haiti": "ht", "IR Iran": "ir", "Iran": "ir", "Iraq": "iq", "Japan": "jp",
+        "Jordan": "jo", "Korea Republic": "kr", "Mexico": "mx", "Morocco": "ma",
+        "Netherlands": "nl", "New Zealand": "nz", "Norway": "no", "Panama": "pa",
+        "Paraguay": "py", "Poland": "pl", "Portugal": "pt", "Qatar": "qa",
+        "Saudi Arabia": "sa", "Scotland": "gb-sct", "Senegal": "sn", "Serbia": "rs",
+        "South Africa": "za", "South Korea": "kr", "Spain": "es", "Sweden": "se",
+        "Switzerland": "ch", "Tunisia": "tn", "Turkey": "tr", "Türkiye": "tr",
+        "United States": "us", "Uruguay": "uy", "Wales": "gb-wls",
+        "Algeria": "dz", "Bosnia and Herzegovina": "ba", "Cabo Verde": "cv",
+        "Colombia": "co", "Congo DR": "cd", "Curaçao": "cw", "Côte d'Ivoire": "ci",
+        "Alemanha": "de", "Espanha": "es", "França": "fr", "México": "mx",
+        "Uzbequistão": "uz", "Uzbekistan": "uz", "Estados Unidos": "us",
+    }
+
     class Meta:
         ordering = ["group", "position", "name"]
         verbose_name = "seleção"
@@ -77,6 +160,19 @@ class Team(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
+    @property
+    def name_ptbr(self) -> str:
+        return self.TEAM_NAMES_PTBR.get(self.name, self.name)
+
+    @property
+    def flag_url(self):
+        if self.flag:
+            return self.flag.url
+        code = self.TEAM_CODES.get(self.name)
+        if code:
+            return f"https://flagcdn.com/w80/{code}.png"
+        return None
 
 
 class MatchQuerySet(models.QuerySet):

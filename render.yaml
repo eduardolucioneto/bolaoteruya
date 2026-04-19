@@ -9,9 +9,11 @@ services:
     name: bolao-web
     env: python
     plan: free
-    buildCommand: "bash ./build.sh"
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --no-input && python manage.py migrate"
     startCommand: "gunicorn config.wsgi:application"
     envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.0"
       - key: DEBUG
         value: "False"
       - key: USE_SQLITE

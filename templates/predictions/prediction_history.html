@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Meus palpites{% endblock %}
+{% block content %}
+<section class="page-intro mb-4">
+    <span class="eyebrow">Histórico pessoal</span>
+    <h1 class="display-6 mb-2">Meus palpites</h1>
+    <p class="text-secondary mb-0">Consulte o que já foi enviado, o que está travado e quanto cada partida rendeu.</p>
+</section>
+<div class="surface-card">
+    <div class="surface-header"><strong>Histórico de palpites</strong></div>
+    <div class="table-responsive">
+        <table class="table app-table table-hover mb-0">
+            <thead><tr><th>Partida</th><th>Palpite</th><th>Pontos</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+                {% for prediction in predictions %}
+                <tr>
+                    <td>{{ prediction.match.home_team }} x {{ prediction.match.away_team }}<br><small class="text-muted">{{ prediction.match.start_time|date:"d/m/Y H:i" }}</small></td>
+                    <td>{{ prediction.predicted_home_score }} x {{ prediction.predicted_away_score }}</td>
+                    <td>{{ prediction.points_awarded }}</td>
+                    <td><span class="badge match-status {% if prediction.locked %}status-locked{% else %}status-open{% endif %}">{{ prediction.locked|yesno:"Travado,Aberto" }}</span></td>
+                    <td><a class="btn btn-sm btn-ghost" href="{% url 'predictions:predict' prediction.match.id %}">Editar</a></td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="text-center py-4">Nenhum palpite cadastrado.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

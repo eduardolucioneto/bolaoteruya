@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Home | {{ pool_config.name }}{% endblock %}
+{% block content %}
+<section class="hero-panel p-4 p-lg-5 mb-4">
+    <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+            <span class="eyebrow mb-3 d-inline-block">Copa do Mundo 2026 • Bolão em tempo real</span>
+            <h1 class="display-4 fw-bold mb-3">Uma central elegante para palpites, resultados e ranking.</h1>
+            <p class="hero-copy mb-4">Cadastre usuários, organize fases, publique resultados oficiais e acompanhe a disputa do bolão com uma experiência mais clara, rápida e pronta para crescer.</p>
+            <div class="d-flex gap-3 flex-wrap">
+                <a class="btn btn-accent btn-lg px-4" href="{% url 'worldcup:match_list' %}">Explorar jogos</a>
+                <a class="btn btn-ghost btn-lg px-4" href="{% url 'ranking:list' %}">Ver ranking</a>
+                <a class="btn btn-ghost btn-lg px-4" href="{% url 'core:regulation' %}">Regulamento</a>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="hero-scoreboard">
+                <div class="score-chip">Admin forte</div>
+                <div class="score-chip">Palpite travado por horário</div>
+                <div class="score-chip">Ranking automático</div>
+                <div class="score-match mt-4">
+                    <div>
+                        <small>Partida destaque</small>
+                        <h2>Brasil <span>2</span> x <span>1</span> França</h2>
+                        <p class="mb-0">Exemplo visual de resultado oficial e apuração.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row g-4">
+    <div class="col-md-4">
+        <div class="feature-card h-100">
+            <span class="feature-kicker">Usuários</span>
+            <h3>Autenticação completa</h3>
+            <p>Login, logout, perfil, reset de senha e controle por grupos e permissões.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="feature-card h-100">
+            <span class="feature-kicker">Jogos</span>
+            <h3>Tabela organizada</h3>
+            <p>Fases, grupos, estádios e partidas com interface objetiva e status visual claro.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="feature-card h-100">
+            <span class="feature-kicker">Pontuação</span>
+            <h3>Ranking transparente</h3>
+            <p>Regras configuráveis, recálculo automático e leitura rápida do desempenho dos participantes.</p>
+        </div>
+    </div>
+</section>
+
+<section class="mt-5">
+    <div class="section-card p-4 p-lg-5">
+        <div class="d-flex gap-2 flex-wrap align-items-center justify-content-between">
+            <div>
+                <h2 class="h3 mb-2">Pronto para rodar no seu ambiente</h2>
+                <p class="mb-0 text-secondary">A aplicação funciona com renderização no servidor e mantém o admin como peça central da operação.</p>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+                {% if user.is_authenticated %}
+                <a class="btn btn-accent btn-lg" href="{% url 'core:dashboard' %}">Ir para o dashboard</a>
+                {% else %}
+                <a class="btn btn-accent btn-lg" href="{% url 'accounts:login' %}">Entrar agora</a>
+                {% endif %}
+                {% if user.is_staff or user.is_superuser %}
+                <a class="btn btn-ghost btn-lg" href="/admin/">Abrir admin</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

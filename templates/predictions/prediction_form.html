@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Palpite{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="surface-card p-4">
+            <div class="card-body p-0">
+                <h1 class="h4">{{ match.home_team }} x {{ match.away_team }}</h1>
+                <p class="text-muted">{{ match.start_time|date:"d/m/Y H:i" }} • {{ match.stage }}</p>
+                {% if match.is_locked %}
+                <div class="alert alert-warning">Os palpites para esta partida estão travados.</div>
+                {% endif %}
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button class="btn btn-accent" {% if match.is_locked %}disabled{% endif %}>Salvar palpite</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

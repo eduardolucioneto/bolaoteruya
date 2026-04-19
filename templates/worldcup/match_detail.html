@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Partida {{ match.match_number }}{% endblock %}
+{% block content %}
+<div class="surface-card p-4 p-lg-5">
+    <div class="match-hero">
+        <span class="eyebrow">Partida {{ match.match_number }}</span>
+        <h1 class="display-6">{{ match.home_team }} <span class="vs-mark">vs</span> {{ match.away_team }}</h1>
+        <p class="text-secondary">{{ match.stage }}{% if match.group %} • Grupo {{ match.group.name }}{% endif %} • {{ match.stadium.name }} • {{ match.start_time|date:"d/m/Y H:i" }}</p>
+        {% if match.finished %}
+        <div class="result-banner">Resultado oficial: {{ match.official_home_score }} x {{ match.official_away_score }}</div>
+        {% endif %}
+        {% if user.is_authenticated %}
+        <a class="btn btn-accent" href="{% url 'predictions:predict' match.id %}">Enviar palpite</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

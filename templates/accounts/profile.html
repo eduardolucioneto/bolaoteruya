@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Meu perfil{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <div class="surface-card p-4">
+            <div class="card-body p-0">
+                <h1 class="h4 mb-3">Meu perfil</h1>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6">{{ user_form.as_p }}</div>
+                        <div class="col-md-6">{{ profile_form.as_p }}</div>
+                    </div>
+                    <button class="btn btn-accent">Salvar alterações</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

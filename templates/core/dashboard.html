@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<section class="page-intro mb-4">
+    <span class="eyebrow">Painel do participante</span>
+    <h1 class="display-6 mb-2">Seu centro de comando no bolão</h1>
+    <p class="text-secondary mb-0">Acompanhe sua evolução, palpites recentes e os jogos que ainda estão abertos.</p>
+</section>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-6 col-xl-3"><div class="metric-card h-100"><small>Pontuação total</small><h3>{{ score.total_points|default:0 }}</h3><p>{{ stats.points }} pontos computados até aqui.</p></div></div>
+    <div class="col-md-6 col-xl-3"><div class="metric-card h-100"><small>Posição</small><h3>{{ my_position|default:"-" }}</h3><p>Sua colocação atual no ranking geral.</p></div></div>
+    <div class="col-md-6 col-xl-3"><div class="metric-card h-100"><small>Palpites enviados</small><h3>{{ predicted_count }}</h3><p>Partidas já registradas por você.</p></div></div>
+    <div class="col-md-6 col-xl-3"><div class="metric-card h-100"><small>Placares exatos</small><h3>{{ stats.exact_hits }}</h3><p>Acertos exatos até o momento.</p></div></div>
+</div>
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="surface-card h-100">
+            <div class="surface-header"><strong>Próximos jogos para palpitar</strong></div>
+            <div class="table-responsive">
+                <table class="table app-table table-hover mb-0">
+                    <thead><tr><th>Jogo</th><th>Data</th><th></th></tr></thead>
+                    <tbody>
+                        {% for match in upcoming_matches %}
+                        <tr>
+                            <td>{{ match.home_team }} x {{ match.away_team }}<br><small class="text-muted">{{ match.stage }}</small></td>
+                            <td>{{ match.start_time|date:"d/m/Y H:i" }}</td>
+                            <td><a class="btn btn-sm btn-accent" href="{% url 'predictions:predict' match.id %}">Palpitar</a></td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="3" class="text-center py-4">Nenhum jogo aberto no momento.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="surface-card mb-4">
+            <div class="surface-header"><strong>Top 5</strong></div>
+            <ul class="list-group list-group-flush">
+                {% for item in ranking_top %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>{{ item.position }}. {{ item.user.username }}</span>
+                    <span class="badge score-badge rounded-pill">{{ item.total_points }} pts</span>
+                </li>
+                {% empty %}
+                <li class="list-group-item">Ranking ainda não calculado.</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="surface-card">
+            <div class="surface-header"><strong>Últimos palpites</strong></div>
+            <ul class="list-group list-group-flush">
+                {% for prediction in my_recent_predictions %}
+                <li class="list-group-item">{{ prediction.match.home_team }} {{ prediction.predicted_home_score }} x {{ prediction.predicted_away_score }} {{ prediction.match.away_team }}</li>
+                {% empty %}
+                <li class="list-group-item">Você ainda não enviou palpites.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

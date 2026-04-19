@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Tabela{% endblock %}
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-header bg-white"><strong>Seleções cadastradas</strong></div>
+    <div class="table-responsive">
+        <table class="table mb-0">
+            <thead><tr><th>Seleção</th><th>Grupo</th><th>Ativa</th></tr></thead>
+            <tbody>
+                {% for team in teams %}
+                <tr>
+                    <td>{{ team.name }}</td>
+                    <td>{{ team.group|default:"-" }}</td>
+                    <td>{{ team.active|yesno:"Sim,Não" }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="3" class="text-center py-4">Nenhuma seleção cadastrada.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Ranking{% endblock %}
+{% block content %}
+<section class="page-intro mb-4">
+    <span class="eyebrow">Classificação</span>
+    <h1 class="display-6 mb-2">Ranking geral</h1>
+    <p class="text-secondary mb-0">Veja a disputa ponto a ponto e acompanhe sua posição entre os participantes.</p>
+</section>
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="surface-card">
+            <div class="surface-header d-flex justify-content-between align-items-center">
+                <strong>
+                    {% if stage_filter == 'stage1' %}1ª Fase - Grupos
+                    {% elif stage_filter == 'stage2' %}2ª Fase - Mata-mata
+                    {% else %}Ranking Geral{% endif %}
+                </strong>
+                <div>
+                    <a href="?stage=" class="btn btn-sm btn-outline {% if not stage_filter %}btn-primary{% else %}btn-ghost{% endif %}">Geral</a>
+                    <a href="?stage=stage1" class="btn btn-sm btn-outline {% if stage_filter == 'stage1' %}btn-primary{% else %}btn-ghost{% endif %}">1ª Fase</a>
+                    <a href="?stage=stage2" class="btn btn-sm btn-outline {% if stage_filter == 'stage2' %}btn-primary{% else %}btn-ghost{% endif %}">2ª Fase</a>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table app-table table-striped mb-0">
+                    <thead><tr><th>Posição</th><th>Usuário</th><th>Pontos</th><th>Exatos</th><th>Acertos</th></tr></thead>
+                    <tbody>
+                        {% for score in scores %}
+                        <tr {% if my_score and score.user_id == my_score.user_id %}class="table-success"{% endif %}>
+                            <td>{{ score.position|default:score.stage1_position|default:score.stage2_position|default:forloop.counter }}</td>
+                            <td>{{ score.user.username|default:score.username }}</td>
+                            <td>{% if stage_filter == 'stage1' %}{{ score.stage1_points }}{% elif stage_filter == 'stage2' %}{{ score.stage2_points }}{% else %}{{ score.total_points }}{% endif %}</td>
+                            <td>{{ score.exact_hits }}</td>
+                            <td>{{ score.outcome_hits }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="5" class="text-center py-4">Ranking ainda não disponível.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        {% if prizes %}
+        <div class="surface-card mb-4">
+            <div class="surface-header"><strong>Premiação</strong></div>
+            <div class="card-body">
+                <p class="mb-2 text-muted"><small>{{ participant_count }} participantes • R$ {{ quota_price }},00 por cota</small></p>
+                <p class="mb-1"><strong>1ª Fase:</strong></p>
+                <ul class="list-unstyled mb-3">
+                    <li>1º lugar: R$ {{ prizes.stage1.first }}</li>
+                    <li>2º lugar: R$ {{ prizes.stage1.second }}</li>
+                    <li>3º lugar: R$ {{ prizes.stage1.third }}</li>
+                </ul>
+                <p class="mb-1"><strong>2ª Fase:</strong></p>
+                <ul class="list-unstyled mb-3">
+                    <li>1º lugar: R$ {{ prizes.stage2.first }}</li>
+                    <li>2º lugar: R$ {{ prizes.stage2.second }}</li>
+                    <li>3º lugar: R$ {{ prizes.stage2.third }}</li>
+                </ul>
+                {% if prizes.extra_prize_count > 0 %}
+                <p class="mb-1"><strong>Prêmios extras:</strong></p>
+                <p class="mb-0 text-muted">{{ prizes.extra_prize_count }}x R$ {{ extra_prize_value }} ({{ prizes.extra_prize_value }} cada)</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        <div class="surface-card">
+            <div class="surface-header"><strong>Minha posição</strong></div>
+            <div class="card-body">
+                {% if my_score %}
+                <p class="mb-1"><strong>{{ my_score.position }}º lugar geral</strong></p>
+                <p class="mb-0 text-muted">{{ my_score.total_points }} pontos acumulados.</p>
+                {% else %}
+                <p class="mb-0 text-muted">Você ainda não pontuou.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

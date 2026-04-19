@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Cadastro{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="surface-card p-4">
+            <div class="card-body p-0">
+                <span class="eyebrow mb-2 d-inline-block">Cadastro</span>
+                <h1 class="h3 mb-3">Solicite seu acesso ao bolão</h1>
+                <p class="text-secondary mb-4">
+                    Para criar sua conta, fale com a administração pelo WhatsApp. O número abaixo pode ser configurado no painel administrativo.
+                </p>
+                <div class="d-flex flex-wrap gap-3 align-items-center">
+                    <a class="btn btn-accent btn-lg" href="{{ pool_config.signup_whatsapp_link }}" target="_blank" rel="noopener noreferrer">
+                        Chamar no WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

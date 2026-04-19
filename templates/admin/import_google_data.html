@@ -1,0 +1,22 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<div id="content-main">
+    <div class="module aligned">
+        <h1>{{ title }}</h1>
+        <p>Cole aqui as URLs públicas do Google Sheets para importar grupos, jogos e ranking. Você pode preencher apenas os blocos que quiser atualizar.</p>
+        <form method="post" novalidate>
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="submit-row">
+                <input type="submit" value="Importar agora" class="default">
+            </div>
+        </form>
+        <hr>
+        <h2>Formatos esperados</h2>
+        <p><strong>Grupos:</strong> <code>name</code>, <code>description</code></p>
+        <p><strong>Jogos:</strong> <code>match_number</code>, <code>stage</code>, <code>home_team</code>, <code>away_team</code>, <code>stadium_name</code>, <code>stadium_city</code>, <code>start_time</code></p>
+        <p><strong>Ranking:</strong> <code>username</code> ou <code>email</code>, <code>total_points</code></p>
+    </div>
+</div>
+{% endblock %}

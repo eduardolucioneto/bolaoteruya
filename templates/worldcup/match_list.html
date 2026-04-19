@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Jogos{% endblock %}
+{% block content %}
+<section class="page-intro mb-4">
+    <span class="eyebrow">Agenda oficial</span>
+    <h1 class="display-6 mb-2">Jogos da competição</h1>
+    <p class="text-secondary mb-0">Visualize as partidas, acompanhe o status e entre rapidamente para palpitar.</p>
+</section>
+<div class="surface-card">
+    <div class="table-responsive" style="max-height: 60vh; overflow-y: auto;">
+        <table class="table app-table table-striped align-middle mb-0">
+            <thead><tr><th>#</th><th>Partida</th><th>Fase</th><th>Data</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+                {% for match in matches %}
+                <tr>
+                    <td>{{ match.match_number }}</td>
+                    <td>{{ match.home_team }} x {{ match.away_team }}</td>
+                    <td>{{ match.stage }}</td>
+                    <td>{{ match.start_time|date:"d/m/Y H:i" }}</td>
+                    <td><span class="badge match-status {% if match.finished %}status-finished{% elif match.is_locked %}status-locked{% else %}status-open{% endif %}">{% if match.finished %}Encerrada{% elif match.is_locked %}Travada{% else %}Aberta{% endif %}</span></td>
+                    <td class="text-end"><a class="btn btn-sm btn-ghost" href="{% url 'worldcup:match_detail' match.id %}">Detalhes</a></td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="text-center py-4">Nenhuma partida cadastrada.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

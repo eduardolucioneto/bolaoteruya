@@ -1,0 +1,42 @@
+databases:
+  - name: bolao-db
+    databaseName: bolao
+    user: bolao_user
+    plan: free
+
+services:
+  - type: web
+    name: bolao-web
+    env: python
+    plan: free
+    buildCommand: "bash ./build.sh"
+    startCommand: "gunicorn config.wsgi:application"
+    envVars:
+      - key: DEBUG
+        value: "False"
+      - key: USE_SQLITE
+        value: "False"
+      - key: DATABASE_NAME
+        fromDatabase:
+          name: bolao-db
+          property: database
+      - key: DATABASE_USER
+        fromDatabase:
+          name: bolao-db
+          property: user
+      - key: DATABASE_PASSWORD
+        fromDatabase:
+          name: bolao-db
+          property: password
+      - key: DATABASE_HOST
+        fromDatabase:
+          name: bolao-db
+          property: host
+      - key: DATABASE_PORT
+        fromDatabase:
+          name: bolao-db
+          property: port
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_HOSTS
+        value: "*"
